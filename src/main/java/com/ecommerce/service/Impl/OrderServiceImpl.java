@@ -8,6 +8,7 @@ import com.ecommerce.entity.User;
 import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.exception.AddressNotFoundException;
 import com.ecommerce.exception.InvalidCreationRazorpayException;
+import com.ecommerce.exception.OrderNotFoundException;
 import com.ecommerce.exception.product.ProductNotFoundException;
 import com.ecommerce.exception.user.UserNotFoundException;
 import com.ecommerce.respository.AddressRepository;
@@ -104,6 +105,17 @@ public class OrderServiceImpl implements OrdersService {
         }
         throw new UserNotFoundException("User not found with ID: " + user_id);
     }
+
+    @Override
+    public Orders updateStatue(Integer Order_id,OrderStatus status) {
+        Orders order = ordersRepository.findById(Order_id).orElseThrow(
+                ()-> new OrderNotFoundException("Order not found with ID: " + Order_id)
+        );
+
+        order.setStatus(status);
+        return ordersRepository.save(order);
+    }
+
 }
 
 

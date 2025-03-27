@@ -1,7 +1,9 @@
 package com.ecommerce.controller;
 
 import com.ecommerce.Dto.RazorpayVerifyPaymentDTO;
+import com.ecommerce.entity.Orders;
 import com.ecommerce.entity.Product;
+import com.ecommerce.enums.OrderStatus;
 import com.ecommerce.service.OrdersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -49,6 +51,21 @@ public class OrderController {
                 "data",userOrders
         );
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/update-order/{orderid}/{status}")
+    public ResponseEntity<Map<String,Object>> updateOrderState(@PathVariable("orderid") Integer orderid
+    ,@PathVariable("status") OrderStatus status){
+
+        Orders order = ordersService.updateStatue(orderid,status);
+        Map<String,Object> response = Map.of(
+                "success",true,
+                "message","Order Status Updated",
+                "data",order
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
     }
 
 }
