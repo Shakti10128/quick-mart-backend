@@ -2,6 +2,7 @@ package com.ecommerce.config;
 
 import com.ecommerce.Utils.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -27,6 +28,17 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppConfig {
 
+    @Value("${CLIENT_LOCALHOST_URL}")
+    private String CLIENT_LOCALHOST_URL;
+
+    @Value("${ADMIN_LOCALHOST_URL}")
+    private String ADMIN_LOCALHOST_URL;
+
+    // hosted website url of client
+    @Value("${CLIENT_URL}")
+    private String CLIENT_URL;
+
+
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -49,7 +61,7 @@ public class AppConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173","https://quick-mart-flax.vercel.app","https://quick-mart-git-main-shakti-kumars-projects.vercel.app"));
+        config.setAllowedOrigins(List.of(CLIENT_LOCALHOST_URL, ADMIN_LOCALHOST_URL, CLIENT_URL));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
