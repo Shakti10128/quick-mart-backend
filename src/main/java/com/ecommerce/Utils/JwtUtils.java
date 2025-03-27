@@ -21,20 +21,6 @@ public class JwtUtils {
         // 1 week in milliseconds
         int EXPIRATION_TIME = 7 * 24 * 60 * 60; // Cookie max-age in seconds
 
-        // 🔍 Check if a token cookie already exists and remove it
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("ecom-token".equals(cookie.getName())) {
-                    cookie.setMaxAge(0);  // Remove the existing token
-                    cookie.setValue("");  // Clear value
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
-                    break;
-                }
-            }
-        }
-
         // 🔐 Generate a new JWT token
         String token = Jwts.builder()
                 .subject(username)
@@ -47,8 +33,9 @@ public class JwtUtils {
         // 🍪 Set a new secure HttpOnly cookie
         Cookie newCookie = new Cookie("ecom-token", token);
         newCookie.setHttpOnly(true); // Prevent JavaScript access (XSS protection)
-        newCookie.setSecure(false);  // Set `true` if using HTTPS
+        newCookie.setSecure(true);  // Set `true` if using HTTPS
         newCookie.setPath("/");      // Available for the entire domain
+        newCookie.setAttribute("SameSite", "None");
         newCookie.setMaxAge(EXPIRATION_TIME);
 
         response.addCookie(newCookie);
