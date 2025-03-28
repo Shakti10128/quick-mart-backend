@@ -1,5 +1,6 @@
 package com.ecommerce.controller;
 
+import com.ecommerce.Dto.OrderDTO;
 import com.ecommerce.Dto.RazorpayVerifyPaymentDTO;
 import com.ecommerce.entity.Orders;
 import com.ecommerce.entity.Product;
@@ -58,14 +59,25 @@ public class OrderController {
     public ResponseEntity<Map<String,Object>> updateOrderState(@PathVariable("orderid") Integer orderid
     ,@PathVariable("status") OrderStatus status){
 
-        Orders order = ordersService.updateStatue(orderid,status);
+        OrderDTO order = ordersService.updateStatue(orderid,status);
         Map<String,Object> response = Map.of(
                 "success",true,
                 "message","Order Status Updated",
                 "data",order
         );
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/allOrders")
+    public ResponseEntity<Map<String,Object>> getAllOrders(){
+        List<OrderDTO> orders = ordersService.getAllOrders();
+        Map<String,Object> response = Map.of(
+                "success",true,
+                "message","fetch all orders successfully",
+                "data", orders
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

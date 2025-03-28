@@ -1,6 +1,7 @@
 package com.ecommerce.entity;
 
 import com.ecommerce.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 

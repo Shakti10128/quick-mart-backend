@@ -1,6 +1,8 @@
 package com.ecommerce.entity;
 
 import com.ecommerce.enums.UserTypes;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -41,10 +43,11 @@ public class User implements UserDetails {
 
     private String profileUrl;
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Address> addresses;
 
+    @JsonIgnore  // Prevent recursion when fetching orders
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Orders> orders;
 
@@ -57,7 +60,6 @@ public class User implements UserDetails {
     public String getUsername() {
         return this.email;
     }
-
 
     public User(String name, String email, String password, UserTypes role) {
         this.name = name;

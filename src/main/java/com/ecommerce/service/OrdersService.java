@@ -1,5 +1,6 @@
 package com.ecommerce.service;
 
+import com.ecommerce.Dto.OrderDTO;
 import com.ecommerce.Dto.RazorpayVerifyPaymentDTO;
 import com.ecommerce.entity.Orders;
 import com.ecommerce.entity.Product;
@@ -15,5 +16,7 @@ public interface OrdersService {
 
     List<Product> getOrder(Integer user_id);
 
-    Orders updateStatue(Integer Order_id, OrderStatus orderStatus);
+    OrderDTO updateStatue(Integer Order_id, OrderStatus orderStatus);
+
+    List<OrderDTO> getAllOrders();
 }

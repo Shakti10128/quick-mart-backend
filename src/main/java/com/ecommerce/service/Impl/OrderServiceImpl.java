@@ -1,5 +1,6 @@
 package com.ecommerce.service.Impl;
 
+import com.ecommerce.Dto.OrderDTO;
 import com.ecommerce.Dto.RazorpayVerifyPaymentDTO;
 import com.ecommerce.entity.Address;
 import com.ecommerce.entity.Orders;
@@ -107,15 +108,33 @@ public class OrderServiceImpl implements OrdersService {
     }
 
     @Override
-    public Orders updateStatue(Integer Order_id,OrderStatus status) {
-        Orders order = ordersRepository.findById(Order_id).orElseThrow(
+    public OrderDTO updateStatue(Integer Order_id,OrderStatus status) {
+        Orders updatedorder = ordersRepository.findById(Order_id).orElseThrow(
                 ()-> new OrderNotFoundException("Order not found with ID: " + Order_id)
         );
-
-        order.setStatus(status);
-        return ordersRepository.save(order);
+        updatedorder.setStatus(status);
+        Orders savedOrder = ordersRepository.save(updatedorder);
+        return convertToOrderDTO(savedOrder);
     }
 
+    @Override
+    public List<OrderDTO> getAllOrders() {
+        List<Orders> orders = ordersRepository.findAll();
+
+        return orders.stream().map(this::convertToOrderDTO)
+                .collect(Collectors.toList());
+    }
+
+    private OrderDTO convertToOrderDTO(Orders order){
+        return new OrderDTO(
+                order.getId(),
+                order.getStatus(),
+                order.getProduct().getName(),
+                order.getProduct().getPrice(),
+                order.getProduct().getProductUrl()
+        );
+    }
 }
+
 
 

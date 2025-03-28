@@ -38,6 +38,9 @@ public class AppConfig {
     @Value("${CLIENT_URL}")
     private String CLIENT_URL;
 
+    @Value("${ADMIN_URL}")
+    private String ADMIN_URL;
+
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -61,7 +64,7 @@ public class AppConfig {
     public UrlBasedCorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(CLIENT_LOCALHOST_URL, ADMIN_LOCALHOST_URL, CLIENT_URL));
+        config.setAllowedOrigins(List.of(CLIENT_LOCALHOST_URL, ADMIN_LOCALHOST_URL, CLIENT_URL,ADMIN_URL));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

@@ -1,13 +1,20 @@
 package com.ecommerce.Dto;
 
+import com.ecommerce.enums.OrderStatus;
 import lombok.Data;
 
 import java.util.List;
 
-@Data
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderDTO {
-    private Integer user_id;
-    private Integer totalPrice;
-    private Integer addressId;
-    private List<Integer> productIds;
+    private Integer id;
+    private OrderStatus status;
+    private String productName;
+    private Integer productPrice;
+    private String productUrl;
 }
