@@ -33,8 +33,8 @@ public class JwtUtils {
         // 🍪 Set a new secure HttpOnly cookie
         Cookie newCookie = new Cookie("ecom-token", token);
         newCookie.setHttpOnly(true); // Prevent JavaScript access (XSS protection)
-        newCookie.setSecure(true);  // Set `true` if using HTTPS
         newCookie.setPath("/");      // Available for the entire domain
+        newCookie.setSecure(true);  // Set `true` if using HTTPS
         newCookie.setAttribute("SameSite", "None");
         newCookie.setMaxAge(EXPIRATION_TIME);
 
@@ -94,21 +94,23 @@ public class JwtUtils {
     }
 
     public static boolean removeTokenFromCookie(HttpServletRequest request, HttpServletResponse response) {
+        boolean isTokenRemoved = false;
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if (cookie.getName().equals("ecom-token")) {
-                    // Set the cookie max age to 0 to expire it
-                    cookie.setMaxAge(0);
-                    cookie.setValue("");  // Clear the cookie's value
+                    cookie.setMaxAge(0);   // Expire the cookie immediately
+                    cookie.setValue("");   // Clear the cookie value
+                    cookie.setPath("/");   // Ensure path matches original
+                    cookie.setSecure(true);  // Works for HTTPS
+                    cookie.setHttpOnly(true); // Prevents JS access
+                    cookie.setAttribute("SameSite", "None"); // Ensures cross-site removal
 
-                    // Add the updated cookie to the response to remove it from the client
-                    cookie.setPath("/");  // Ensure the path matches the original cookie
                     response.addCookie(cookie);
-                    return true;
+                    isTokenRemoved = true;
                 }
             }
         }
-        return false;
+        return isTokenRemoved;
     }
 
 
